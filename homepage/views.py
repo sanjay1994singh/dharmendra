@@ -7,8 +7,11 @@ from news.models import News
 # Create your views here.
 def homepage(request):
     news = News.objects.all().order_by('-id')
-    # top tranding news ----
-    first_news = news[0]
+    try:
+        # top tranding news ----
+        first_news = news[0]
+    except:
+        first_news = ''
     top_other_tranding = news[1:4]
     # end top tranding news ----
 
