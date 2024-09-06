@@ -30,7 +30,7 @@ class Category(models.Model):
 
 class News(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
-    title = models.TextField(null=True, blank=True)
+    title = models.CharField(max_length=500, null=True, blank=True)
     text = models.TextField(null=True, blank=True)
     featured_image = models.ImageField(upload_to='news_image', null=True, blank=True)
     count = models.IntegerField(default=0)
