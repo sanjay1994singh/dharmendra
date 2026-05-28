@@ -6,27 +6,13 @@
 
 {% block metatags %}
 
-<!-- BASIC SEO -->
-
-<meta name="title"
-      content="{{ news.title }}">
+<!-- SEO -->
 
 <meta name="description"
       content="{{ news.text|truncatewords:30 }}">
 
 <meta name="keywords"
-      content="{{ news.title }}, {{ news.category.name }}, breaking news, hindi news">
-
-<meta name="author"
-      content="News Fast Live">
-
-<meta name="robots"
-      content="index, follow">
-
-<!-- OPEN GRAPH -->
-
-<meta property="og:type"
-      content="article">
+      content="{{ news.title }}, {{ news.category }}, breaking news, hindi news">
 
 <meta property="og:title"
       content="{{ news.title }}">
@@ -34,37 +20,14 @@
 <meta property="og:description"
       content="{{ news.text|truncatewords:30 }}">
 
+<meta property="og:image"
+      content="{{ absolute_image_url }}">
+
 <meta property="og:url"
       content="{{ current_url }}">
 
-<meta property="og:site_name"
-      content="News Fast Live">
-
-{% if image_url %}
-
-<meta property="og:image"
-      content="{{ image_url }}">
-
-<meta property="og:image:width"
-      content="1200">
-
-<meta property="og:image:height"
-      content="630">
-
-{% endif %}
-
-<!-- ARTICLE -->
-
-<meta property="article:published_time"
-      content="{{ news.created_at|date:'c' }}">
-
-<meta property="article:section"
-      content="{{ news.category.name }}">
-
-<meta property="article:author"
-      content="{{ news.reporter }}">
-
-<!-- TWITTER -->
+<meta property="og:type"
+      content="article">
 
 <meta name="twitter:card"
       content="summary_large_image">
@@ -75,378 +38,394 @@
 <meta name="twitter:description"
       content="{{ news.text|truncatewords:30 }}">
 
-{% if image_url %}
-
 <meta name="twitter:image"
-      content="{{ image_url }}">
-
-{% endif %}
-
-<meta name="twitter:url"
-      content="{{ current_url }}">
+      content="{{ absolute_image_url }}">
 
 {% endblock metatags %}
 
-{% block content %}
+{% block css %}
 
 <style>
 
-    /* =========================
-    DETAIL PAGE
-    ========================= */
+/* =========================
+DETAIL PAGE
+========================= */
 
-    .news-detail-section{
-        padding:50px 0;
+body{
+    background:#f5f7fb;
+}
+
+/* HERO */
+
+.news-hero{
+    position:relative;
+    border-radius:35px;
+    overflow:hidden;
+    margin-bottom:40px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.12);
+}
+
+.news-hero img{
+    width:100%;
+    height:550px;
+    object-fit:cover;
+}
+
+.hero-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,0.95),
+        rgba(0,0,0,0.2)
+    );
+}
+
+.hero-content{
+    position:absolute;
+    left:40px;
+    right:40px;
+    bottom:40px;
+    color:#fff;
+}
+
+.category-badge{
+    display:inline-block;
+    background:red;
+    color:#fff;
+    padding:10px 22px;
+    border-radius:40px;
+    font-weight:700;
+    margin-bottom:20px;
+}
+
+.hero-title{
+    font-size:52px;
+    font-weight:900;
+    line-height:1.3;
+}
+
+/* META */
+
+.news-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-top:25px;
+}
+
+.meta-item{
+    background:rgba(255,255,255,0.15);
+    padding:12px 18px;
+    border-radius:14px;
+    backdrop-filter:blur(8px);
+    font-size:14px;
+}
+
+/* CONTENT */
+
+.news-content-box{
+    background:#fff;
+    padding:45px;
+    border-radius:30px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.08);
+}
+
+.news-content{
+    font-size:21px;
+    line-height:2;
+    color:#333;
+    text-align:justify;
+}
+
+/* SHARE */
+
+.share-box{
+    margin-top:40px;
+    padding-top:25px;
+    border-top:1px solid #eee;
+}
+
+.share-title{
+    font-size:24px;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.share-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.share-btn{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:22px;
+    transition:0.3s;
+}
+
+.share-btn:hover{
+    transform:translateY(-6px) scale(1.08);
+    color:#fff;
+}
+
+.whatsapp{
+    background:#25d366;
+}
+
+.facebook{
+    background:#1877f2;
+}
+
+.twitter{
+    background:#000;
+}
+
+.telegram{
+    background:#0088cc;
+}
+
+.linkedin{
+    background:#0a66c2;
+}
+
+/* SIDEBAR */
+
+.sidebar-box{
+    background:#fff;
+    padding:30px;
+    border-radius:30px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.08);
+    position:sticky;
+    top:120px;
+}
+
+.sidebar-title{
+    font-size:30px;
+    font-weight:900;
+    margin-bottom:30px;
+}
+
+/* RELATED */
+
+.related-news{
+    display:flex;
+    gap:15px;
+    margin-bottom:22px;
+    transition:0.3s;
+}
+
+.related-news:hover{
+    transform:translateX(6px);
+}
+
+.related-news img{
+    width:110px;
+    height:90px;
+    object-fit:cover;
+    border-radius:16px;
+}
+
+.related-news h6{
+    font-size:15px;
+    font-weight:800;
+    line-height:1.6;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .news-hero img{
+        height:350px;
     }
 
-    /* CATEGORY */
-
-    .category-badge{
-        background:red;
-        color:#fff;
-        padding:10px 22px;
-        border-radius:40px;
-        font-size:14px;
-        font-weight:700;
-        display:inline-block;
+    .hero-title{
+        font-size:32px;
     }
 
-    /* TITLE */
-
-    .news-title{
-        font-size:52px;
-        font-weight:900;
-        line-height:1.3;
-        margin-top:25px;
-        margin-bottom:25px;
-        color:#111;
+    .hero-content{
+        left:20px;
+        right:20px;
+        bottom:20px;
     }
 
-    /* META */
-
-    .news-meta{
-        display:flex;
-        flex-wrap:wrap;
-        gap:18px;
-        margin-bottom:30px;
+    .news-content-box{
+        padding:25px;
     }
-
-    .meta-box{
-        background:#fff;
-        padding:14px 20px;
-        border-radius:14px;
-        box-shadow:0 5px 20px rgba(0,0,0,0.06);
-        font-size:15px;
-    }
-
-    /* FEATURED IMAGE */
-
-    .detail-image-wrapper{
-        position:relative;
-        overflow:hidden;
-        border-radius:30px;
-        margin-bottom:35px;
-        box-shadow:0 15px 40px rgba(0,0,0,0.12);
-    }
-
-    .detail-image{
-        width:100%;
-        height:520px;
-        object-fit:cover;
-        transition:0.5s;
-    }
-
-    .detail-image:hover{
-        transform:scale(1.03);
-    }
-
-    /* CONTENT */
 
     .news-content{
-        background:#fff;
-        padding:40px;
-        border-radius:28px;
-        box-shadow:0 10px 35px rgba(0,0,0,0.08);
-        font-size:20px;
-        line-height:2;
-        color:#333;
+        font-size:18px;
     }
-
-    /* SHARE */
-
-    .share-box{
-        background:#fff;
-        padding:30px;
-        border-radius:25px;
-        margin-top:40px;
-        box-shadow:0 10px 30px rgba(0,0,0,0.08);
-    }
-
-    .share-title{
-        font-size:26px;
-        font-weight:800;
-        margin-bottom:20px;
-    }
-
-    .share-buttons{
-        display:flex;
-        flex-wrap:wrap;
-        gap:15px;
-    }
-
-    .share-btn{
-        padding:14px 25px;
-        border-radius:12px;
-        color:#fff;
-        font-weight:700;
-        transition:0.3s;
-    }
-
-    .share-btn:hover{
-        transform:translateY(-5px);
-        color:#fff;
-    }
-
-    .facebook{
-        background:#1877f2;
-    }
-
-    .twitter{
-        background:#000;
-    }
-
-    .whatsapp{
-        background:#25d366;
-    }
-
-    .telegram{
-        background:#0088cc;
-    }
-
-    .linkedin{
-        background:#0a66c2;
-    }
-
-    /* SIDEBAR */
 
     .sidebar-box{
-        background:#fff;
-        padding:30px;
-        border-radius:28px;
-        box-shadow:0 10px 35px rgba(0,0,0,0.08);
-        position:sticky;
-        top:130px;
+        margin-top:40px;
     }
 
-    .sidebar-title{
-        font-size:28px;
-        font-weight:900;
-        margin-bottom:30px;
-    }
-
-    /* RELATED */
-
-    .related-news{
-        display:flex;
-        gap:15px;
-        margin-bottom:22px;
-        transition:0.3s;
-    }
-
-    .related-news:hover{
-        transform:translateX(5px);
-    }
-
-    .related-news img{
-        width:110px;
-        height:90px;
-        object-fit:cover;
-        border-radius:14px;
-    }
-
-    .related-content h6{
-        font-weight:800;
-        line-height:1.6;
-        font-size:15px;
-    }
-
-    .related-content small{
-        color:#777;
-    }
-
-    /* MOBILE */
-
-    @media(max-width:768px){
-
-        .news-title{
-            font-size:34px;
-        }
-
-        .detail-image{
-            height:300px;
-        }
-
-        .news-content{
-            padding:25px;
-            font-size:18px;
-        }
-
-        .sidebar-box{
-            margin-top:40px;
-        }
-
-    }
+}
 
 </style>
 
-<div class="news-detail-section">
+{% endblock css %}
+
+{% block content %}
+
+<section class="py-5">
 
     <div class="container">
 
         <div class="row">
 
-            <!-- MAIN CONTENT -->
+            <!-- MAIN -->
 
             <div class="col-lg-8">
 
-                <!-- CATEGORY -->
+                <!-- HERO -->
 
-                <div class="category-badge">
+                <div class="news-hero">
 
-                    {{ news.category.name }}
-
-                </div>
-
-                <!-- TITLE -->
-
-                <h1 class="news-title">
-
-                    {{ news.title }}
-
-                </h1>
-
-                <!-- META -->
-
-                <div class="news-meta">
-
-                    <div class="meta-box">
-
-                        <strong>Reporter:</strong>
-
-                        {{ news.reporter }}
-
-                    </div>
-
-                    <div class="meta-box">
-
-                        <strong>Date:</strong>
-
-                        {{ news.created_at|date:"d M Y" }}
-
-                    </div>
-
-                    <div class="meta-box">
-
-                        <strong>Views:</strong>
-
-                        {{ news.count }}
-
-                    </div>
-
-                </div>
-
-                <!-- FEATURED IMAGE -->
-
-                {% if news.featured_image %}
-
-                <div class="detail-image-wrapper">
+                    {% if news.featured_image %}
 
                     <img src="{{ news.featured_image.url }}"
-                         class="detail-image">
+                         alt="{{ news.title }}">
+
+                    {% endif %}
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+
+                        <div class="category-badge">
+
+                            {{ news.category }}
+
+                        </div>
+
+                        <h1 class="hero-title">
+
+                            {{ news.title }}
+
+                        </h1>
+
+                        <div class="news-meta">
+
+                            <div class="meta-item">
+
+                                👤
+
+                                {% if news.user %}
+
+                                    {{ news.user.first_name }}
+
+                                {% else %}
+
+                                    News Fast Live
+
+                                {% endif %}
+
+                            </div>
+
+                            <div class="meta-item">
+
+                                📅
+
+                                {{ news.created_at|date:"j F Y, H:i" }}
+
+                            </div>
+
+                            <div class="meta-item">
+
+                                👁️
+
+                                {{ news.count }} Views
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
-
-                {% endif %}
 
                 <!-- CONTENT -->
 
-                <div class="news-content">
+                <div class="news-content-box">
 
-                    {{ news.text|linebreaks }}
+                    <div class="news-content">
 
-                </div>
+                        {{ news.text|safe }}
 
-                <!-- SHARE BOX -->
+                    </div>
 
-                <div class="share-box">
+                    <!-- SHARE -->
 
-                    <h3 class="share-title">
+                    <div class="share-box">
 
-                        Share This News
+                        <h3 class="share-title">
 
-                    </h3>
+                            Share This News
 
-                    <div class="share-buttons">
+                        </h3>
 
-                        <!-- FACEBOOK -->
+                        <div class="share-buttons">
 
-                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ current_url }}"
+                            <!-- WHATSAPP -->
 
-                           target="_blank"
+                            <a href="https://wa.me/?text={{ news.title }} - {{ current_url }}"
+                               target="_blank"
+                               class="share-btn whatsapp">
 
-                           class="share-btn facebook">
+                                <i class="bi bi-whatsapp"></i>
 
-                            Facebook
+                            </a>
 
-                        </a>
+                            <!-- FACEBOOK -->
 
-                        <!-- TWITTER -->
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ current_url }}"
+                               target="_blank"
+                               class="share-btn facebook">
 
-                        <a href="https://twitter.com/intent/tweet?text={{ share_title }}&url={{ current_url }}"
+                                <i class="bi bi-facebook"></i>
 
-                           target="_blank"
+                            </a>
 
-                           class="share-btn twitter">
+                            <!-- TWITTER -->
 
-                            Twitter
+                            <a href="https://twitter.com/intent/tweet?url={{ current_url }}&text={{ news.title }}"
+                               target="_blank"
+                               class="share-btn twitter">
 
-                        </a>
+                                <i class="bi bi-twitter-x"></i>
 
-                        <!-- WHATSAPP -->
+                            </a>
 
-                        <a href="https://api.whatsapp.com/send?text={{ share_title }} {{ current_url }}"
+                            <!-- TELEGRAM -->
 
-                           target="_blank"
+                            <a href="https://t.me/share/url?url={{ current_url }}&text={{ news.title }}"
+                               target="_blank"
+                               class="share-btn telegram">
 
-                           class="share-btn whatsapp">
+                                <i class="bi bi-telegram"></i>
 
-                            WhatsApp
+                            </a>
 
-                        </a>
+                            <!-- LINKEDIN -->
 
-                        <!-- TELEGRAM -->
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ current_url }}"
+                               target="_blank"
+                               class="share-btn linkedin">
 
-                        <a href="https://t.me/share/url?url={{ current_url }}&text={{ share_title }}"
+                                <i class="bi bi-linkedin"></i>
 
-                           target="_blank"
+                            </a>
 
-                           class="share-btn telegram">
-
-                            Telegram
-
-                        </a>
-
-                        <!-- LINKEDIN -->
-
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ current_url }}"
-
-                           target="_blank"
-
-                           class="share-btn linkedin">
-
-                            LinkedIn
-
-                        </a>
+                        </div>
 
                     </div>
 
@@ -468,25 +447,27 @@
 
                     {% for item in related_news %}
 
-                    <a href="{% url 'news_detail' item.id %}">
+                    <a href="{% url 'news_detail' item.id %}"
+                       class="text-dark">
 
                         <div class="related-news">
 
                             {% if item.featured_image %}
 
-                            <img src="{{ item.featured_image.url }}">
+                            <img src="{{ item.featured_image.url }}"
+                                 alt="{{ item.title }}">
 
                             {% endif %}
 
-                            <div class="related-content">
+                            <div>
 
-                                <h6 class="text-dark">
+                                <h6>
 
                                     {{ item.title|truncatechars:65 }}
 
                                 </h6>
 
-                                <small>
+                                <small class="text-muted">
 
                                     {{ item.created_at|date:"d M Y" }}
 
@@ -508,6 +489,6 @@
 
     </div>
 
-</div>
+</section>
 
-{% endblock %}
+{% endblock content %}

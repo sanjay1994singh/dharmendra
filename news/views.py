@@ -81,35 +81,19 @@ def news_detail(request, id):
 
     # current url
 
-    current_url = request.build_absolute_uri()
-
-    # title
-
-    share_title = news.title
-
-    # thumbnail image
+    absolute_image_url = ''
 
     if news.featured_image:
-
-        image_url = request.build_absolute_uri(
+        absolute_image_url = request.build_absolute_uri(
             news.featured_image.url
         )
 
-    else:
-
-        image_url = ''
-
     context = {
 
+        'absolute_image_url': absolute_image_url,
         'news': news,
 
         'related_news': related_news,
-
-        'current_url': current_url,
-
-        'share_title': share_title,
-
-        'image_url': image_url,
 
     }
 
