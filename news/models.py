@@ -1,4 +1,5 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 
 # Create your models here.
@@ -18,7 +19,7 @@ class Category(models.Model):
 class News(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=500, null=True, blank=True)
-    text = models.TextField(null=True, blank=True)
+    text = RichTextField(null=True)
     featured_image = models.ImageField(upload_to='news_image', null=True, blank=True)
     count = models.IntegerField(default=0)
     reporter = models.CharField(max_length=100, default='Dharmendra Chaturvedi')
