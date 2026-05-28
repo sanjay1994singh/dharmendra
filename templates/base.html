@@ -9,49 +9,9 @@
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-    <!-- META TAG BLOCK -->
+   {% block metatags %}
 
-    <meta name="description"
-          content="{% block meta_description %}Latest breaking news from News Fast Live{% endblock %}">
-
-    <meta name="keywords"
-          content="{% block meta_keywords %}news, hindi news, breaking news, india news{% endblock %}">
-
-    <meta name="author"
-          content="News Fast Live">
-
-    <!-- OPEN GRAPH -->
-    {% block meta %}
-
-    <meta property="og:title"
-          content="{% block og_title %}News Fast Live{% endblock %}">
-
-    <meta property="og:description"
-          content="{% block og_description %}Latest breaking news and live updates{% endblock %}">
-
-    <meta property="og:image"
-          content="{% block og_image %}{% endblock %}">
-
-    <meta property="og:url"
-          content="{% block og_url %}{% endblock %}">
-
-    <meta property="og:type"
-          content="article">
-
-    <!-- TWITTER -->
-
-    <meta name="twitter:card"
-          content="summary_large_image">
-
-    <meta name="twitter:title"
-          content="{% block twitter_title %}News Fast Live{% endblock %}">
-
-    <meta name="twitter:description"
-          content="{% block twitter_description %}Latest breaking news{% endblock %}">
-
-    <meta name="twitter:image"
-          content="{% block twitter_image %}{% endblock %}">
-    {% endblock meta %}
+    {% endblock %}
 
     <title>
         {% block title %}

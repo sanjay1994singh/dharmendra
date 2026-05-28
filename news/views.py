@@ -79,21 +79,23 @@ def news_detail(request, id):
         id=id
     ).order_by('-id')[:6]
 
-    # current url
+    # absolute image url
 
     absolute_image_url = ''
 
     if news.featured_image:
+
         absolute_image_url = request.build_absolute_uri(
             news.featured_image.url
         )
 
     context = {
 
-        'absolute_image_url': absolute_image_url,
         'news': news,
 
         'related_news': related_news,
+
+        'absolute_image_url': absolute_image_url,
 
     }
 
