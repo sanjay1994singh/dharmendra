@@ -6,6 +6,42 @@
 {{ selected_category.name }}
 {% endblock %}
 
+{% block meta_description %}
+{{ news.text|truncatechars:150 }}
+{% endblock %}
+
+{% block meta_keywords %}
+{{ news.title }}, {{ news.category.name }}, hindi news, breaking news
+{% endblock %}
+
+{% block og_title %}
+{{ news.title }}
+{% endblock %}
+
+{% block og_description %}
+{{ news.text|truncatechars:150 }}
+{% endblock %}
+
+{% block og_image %}
+{{ image_url }}
+{% endblock %}
+
+{% block og_url %}
+{{ current_url }}
+{% endblock %}
+
+{% block twitter_title %}
+{{ news.title }}
+{% endblock %}
+
+{% block twitter_description %}
+{{ news.text|truncatechars:150 }}
+{% endblock %}
+
+{% block twitter_image %}
+{{ image_url }}
+{% endblock %}
+
 {% block content %}
 
 <div class="container mt-5">
