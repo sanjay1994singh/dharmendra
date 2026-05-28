@@ -352,44 +352,88 @@ News Fast Live
 
     <!-- LATEST NEWS -->
 
-    <div class="row mt-5">
+<div class="row mt-5">
 
-        <div class="col-lg-8">
+    <div class="col-lg-8">
 
-            <h2 class="section-title">
-                Latest Headlines
-            </h2>
+        <h2 class="section-title">
+            Latest Headlines
+        </h2>
 
-            <div class="row">
+        <div class="row">
 
-                {% for news in page_obj %}
+            {% for news in page_obj|slice:":4" %}
 
-                <div class="col-md-6 mb-4">
+            <div class="col-md-6 mb-4">
 
-                    <div class="news-card">
+                <div class="news-card h-100">
 
-                        {% if news.featured_image %}
-                        <img src="{{ news.featured_image.url }}">
-                        {% endif %}
+                    {% if news.featured_image %}
 
-                        <div class="news-body">
+                    <div style="overflow:hidden; border-radius:20px 20px 0 0;">
 
-                            <h4>
+                        <img src="{{ news.featured_image.url }}"
+                             class="w-100"
+                             style="
+                                height:240px;
+                                object-fit:cover;
+                                transition:0.4s;
+                             ">
 
-                                <a href="{% url 'news_detail' news.id %}"
-                                   class="text-dark">
+                    </div>
 
-                                    {{ news.title|truncatechars:75 }}
+                    {% endif %}
 
-                                </a>
+                    <div class="news-body">
 
-                            </h4>
+                        <div class="mb-3">
 
-                            <p>
+                            <span style="
+                                background:red;
+                                color:#fff;
+                                padding:6px 14px;
+                                border-radius:30px;
+                                font-size:12px;
+                                font-weight:700;
+                            ">
 
-                                {{ news.text|truncatechars:120 }}
+                                {{ news.category.name }}
 
-                            </p>
+                            </span>
+
+                        </div>
+
+                        <h4>
+
+                            <a href="{% url 'news_detail' news.id %}"
+                               class="text-dark text-decoration-none">
+
+                                {{ news.title|truncatechars:75 }}
+
+                            </a>
+
+                        </h4>
+
+                        <p>
+
+                            {{ news.text|truncatechars:120 }}
+
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+
+                            <small class="text-muted">
+
+                                {{ news.created_at|date:"d M Y" }}
+
+                            </small>
+
+                            <a href="{% url 'news_detail' news.id %}"
+                               class="btn btn-danger rounded-pill px-4">
+
+                                Read More
+
+                            </a>
 
                         </div>
 
@@ -397,94 +441,64 @@ News Fast Live
 
                 </div>
 
-                {% endfor %}
-
             </div>
 
-            <!-- PAGINATION -->
-
-            <div class="pagination-wrapper">
-
-                {% if page_obj.has_previous %}
-
-                <a href="?page={{ page_obj.previous_page_number }}">
-                    ‹
-                </a>
-
-                {% endif %}
-
-                {% for num in page_obj.paginator.page_range %}
-
-                {% if page_obj.number == num %}
-
-                <span class="active">
-                        {{ num }}
-                    </span>
-
-                {% else %}
-
-                <a href="?page={{ num }}">
-                    {{ num }}
-                </a>
-
-                {% endif %}
-
-                {% endfor %}
-
-                {% if page_obj.has_next %}
-
-                <a href="?page={{ page_obj.next_page_number }}">
-                    ›
-                </a>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-        <!-- TRENDING -->
-
-        <div class="col-lg-4">
-
-            <h2 class="section-title">
-                Trending
-            </h2>
-
-            <div class="trending-box">
-
-                {% for news in trending_news %}
-
-                <div class="trending-item">
-
-                    <div class="trend-number">
-                        {{ forloop.counter }}
-                    </div>
-
-                    <div>
-
-                        <a href="{% url 'news_detail' news.id %}"
-                           class="text-dark">
-
-                            <h6 class="fw-bold">
-
-                                {{ news.title|truncatechars:70 }}
-
-                            </h6>
-
-                        </a>
-
-                    </div>
-
-                </div>
-
-                {% endfor %}
-
-            </div>
+            {% endfor %}
 
         </div>
 
     </div>
+
+    <!-- TRENDING -->
+
+    <div class="col-lg-4">
+
+        <h2 class="section-title">
+            Trending
+        </h2>
+
+        <div class="trending-box">
+
+            {% for news in trending_news %}
+
+            <div class="trending-item">
+
+                <div class="trend-number">
+
+                    {{ forloop.counter }}
+
+                </div>
+
+                <div>
+
+                    <a href="{% url 'news_detail' news.id %}"
+                       class="text-dark text-decoration-none">
+
+                        <h6 class="fw-bold">
+
+                            {{ news.title|truncatechars:70 }}
+
+                        </h6>
+
+                    </a>
+
+                    <small class="text-muted">
+
+                        {{ news.created_at|date:"d M Y" }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
 
     <!-- CATEGORY NEWS -->
 
