@@ -59,24 +59,57 @@ def home(request):
 
 
 def news_detail(request, id):
+
     news = get_object_or_404(
         News,
         id=id
     )
 
+    # increase views
+
     news.count += 1
 
     news.save()
 
+    # related news
+
     related_news = News.objects.filter(
         category=news.category
-    ).exclude(id=id).order_by('-id')[:6]
+    ).exclude(
+        id=id
+    ).order_by('-id')[:6]
+
+    # current url
+
+    current_url = request.build_absolute_uri()
+
+    # title
+
+    share_title = news.title
+
+    # thumbnail image
+
+    if news.featured_image:
+
+        image_url = request.build_absolute_uri(
+            news.featured_image.url
+        )
+
+    else:
+
+        image_url = ''
 
     context = {
 
         'news': news,
 
         'related_news': related_news,
+
+        'current_url': current_url,
+
+        'share_title': share_title,
+
+        'image_url': image_url,
 
     }
 
