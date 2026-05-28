@@ -21,6 +21,7 @@
           content="News Fast Live">
 
     <!-- OPEN GRAPH -->
+    {% block meta %}
 
     <meta property="og:title"
           content="{% block og_title %}News Fast Live{% endblock %}">
@@ -50,6 +51,7 @@
 
     <meta name="twitter:image"
           content="{% block twitter_image %}{% endblock %}">
+    {% endblock meta %}
 
     <title>
         {% block title %}
