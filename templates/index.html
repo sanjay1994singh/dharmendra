@@ -52,101 +52,7 @@ News Fast Live
         }
     }
 
-    /* HERO */
 
-    .hero-main{
-        position:relative;
-        height:620px;
-        border-radius:30px;
-        overflow:hidden;
-        margin-bottom:40px;
-    }
-
-    .hero-main img{
-        width:100%;
-        height:100%;
-        object-fit:cover;
-    }
-
-    .hero-overlay{
-        position:absolute;
-        inset:0;
-        background:linear-gradient(
-            to top,
-            rgba(0,0,0,0.95),
-            rgba(0,0,0,0.2)
-        );
-    }
-
-    .hero-content{
-        position:absolute;
-        bottom:40px;
-        left:40px;
-        right:40px;
-        color:#fff;
-    }
-
-    .hero-content h1{
-        font-size:58px;
-        font-weight:900;
-        line-height:1.2;
-    }
-
-    .hero-content p{
-        color:#ddd;
-        margin-top:20px;
-        font-size:18px;
-    }
-
-    .hero-btn{
-        display:inline-block;
-        margin-top:25px;
-        background:red;
-        color:#fff;
-        padding:15px 35px;
-        border-radius:50px;
-        font-weight:700;
-    }
-
-    /* SIDE HERO */
-
-    .side-news{
-        position:relative;
-        height:300px;
-        border-radius:22px;
-        overflow:hidden;
-        margin-bottom:20px;
-    }
-
-    .side-news img{
-        width:100%;
-        height:100%;
-        object-fit:cover;
-    }
-
-    .side-overlay{
-        position:absolute;
-        inset:0;
-        background:linear-gradient(
-            to top,
-            rgba(0,0,0,0.92),
-            rgba(0,0,0,0.2)
-        );
-    }
-
-    .side-content{
-        position:absolute;
-        bottom:20px;
-        left:20px;
-        right:20px;
-        color:#fff;
-    }
-
-    .side-content h4{
-        font-size:22px;
-        font-weight:800;
-        line-height:1.5;
-    }
 
     /* SECTION */
 
@@ -246,6 +152,146 @@ News Fast Live
 
 </style>
 
+<!-- HERO SECTION NEW STYLE -->
+
+<style>
+
+.hero-wall{
+    margin-top:30px;
+    margin-bottom:60px;
+}
+
+/* LEFT BIG STORY */
+
+.hero-big{
+    position:relative;
+    height:720px;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 20px 50px rgba(0,0,0,0.15);
+}
+
+.hero-big img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.hero-tag{
+    position:absolute;
+    top:20px;
+    left:20px;
+    background:#ff0000;
+    color:#fff;
+    padding:8px 18px;
+    border-radius:30px;
+    font-size:12px;
+    font-weight:800;
+    z-index:2;
+}
+
+.hero-bottom{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:30px;
+    background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    color:#fff;
+}
+
+.hero-bottom h1{
+    font-size:42px;
+    font-weight:900;
+    line-height:1.3;
+    margin-bottom:10px;
+}
+
+.hero-bottom p{
+    font-size:16px;
+    opacity:0.9;
+}
+
+/* RIGHT STACK */
+
+.hero-stack{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.stack-card{
+    position:relative;
+    height:230px;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 10px 25px rgba(0,0,0,0.12);
+}
+
+.stack-card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:0.4s;
+}
+
+.stack-card:hover img{
+    transform:scale(1.08);
+}
+
+.stack-overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+.stack-text{
+    position:absolute;
+    bottom:15px;
+    left:15px;
+    right:15px;
+    color:#fff;
+}
+
+.stack-text h4{
+    font-size:18px;
+    font-weight:800;
+    line-height:1.4;
+}
+
+.stack-tag{
+    display:inline-block;
+    background:rgba(255,0,0,0.9);
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:11px;
+    margin-bottom:8px;
+    font-weight:700;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .hero-big{
+        height:420px;
+        margin-bottom:20px;
+    }
+
+    .hero-bottom h1{
+        font-size:26px;
+    }
+
+    .stack-card{
+        height:180px;
+    }
+
+}
+
+</style>
+
+
+
 <div class="container">
 
     <!-- BREAKING -->
@@ -271,122 +317,131 @@ News Fast Live
         </div>
 
     </div>
+    <!-- HERO SECTION START -->
 
-    <!-- HERO -->
+
+
+    <div class="hero-wall">
 
     <div class="row">
 
+        <!-- BIG FEATURE STORY -->
+
         <div class="col-lg-8">
 
-            {% for hero in latest_news %}
-
-            <div class="hero-main">
+            {% for hero in latest_news|slice:":1" %}
+            <a href="{% url 'news_detail' hero.id %}" class="text-white text-decoration-none">
+            <div class="hero-big">
 
                 {% if hero.featured_image %}
                 <img src="{{ hero.featured_image.url }}">
                 {% endif %}
 
-                <div class="hero-overlay"></div>
+                <div class="hero-tag">
+                    BREAKING
+                </div>
 
-                <div class="hero-content">
+                <div class="hero-bottom">
 
                     <h1>
-                        {{ hero.title }}
+                        {{ hero.title|truncatechars:120 }}
                     </h1>
 
                     <p>
                         {{ hero.text|truncatechars:180 }}
                     </p>
 
-                    <a href="{% url 'news_detail' hero.id %}"
-                       class="hero-btn">
-
-                        Read Full Story
-
-                    </a>
-
                 </div>
 
             </div>
+            </a>
 
             {% endfor %}
 
         </div>
 
-        <!-- SIDE -->
+        <!-- STACKED NEWS -->
 
         <div class="col-lg-4">
 
-            {% for news in trending_news|slice:":2" %}
+            <div class="hero-stack">
 
-            <div class="side-news">
+                {% for news in trending_news|slice:":3" %}
 
-                {% if news.featured_image %}
-                <img src="{{ news.featured_image.url }}">
-                {% endif %}
+                <div class="stack-card">
 
-                <div class="side-overlay"></div>
+                    {% if news.featured_image %}
+                    <img src="{{ news.featured_image.url }}">
+                    {% endif %}
 
-                <div class="side-content">
+                    <div class="stack-overlay"></div>
 
-                    <h4>
+                    <div class="stack-text">
 
-                        <a href="{% url 'news_detail' news.id %}"
-                           class="text-white">
+                        <div class="stack-tag">
+                            TRENDING
+                        </div>
 
-                            {{ news.title|truncatechars:60 }}
+                        <h4>
+                            <a href="{% url 'news_detail' news.id %}" class="text-white text-decoration-none">
+                                {{ news.title|truncatechars:70 }}
+                            </a>
+                        </h4>
 
-                        </a>
-
-                    </h4>
+                    </div>
 
                 </div>
 
-            </div>
+                {% endfor %}
 
-            {% endfor %}
+            </div>
 
         </div>
 
     </div>
 
+</div>
+
+    <!-- HERO SECTION END -->
+
+
     <!-- LATEST NEWS -->
 
-<div class="row mt-5">
+    <div class="row mt-5">
 
-    <div class="col-lg-8">
+        <div class="col-lg-8">
 
-        <h2 class="section-title">
-            Latest Headlines
-        </h2>
+            <h2 class="section-title">
+                Latest Headlines
+            </h2>
 
-        <div class="row">
+            <div class="row">
 
-            {% for news in page_obj|slice:":4" %}
+                {% for news in page_obj|slice:":4" %}
 
-            <div class="col-md-6 mb-4">
+                <div class="col-md-6 mb-4">
 
-                <div class="news-card h-100">
+                    <div class="news-card h-100">
 
-                    {% if news.featured_image %}
+                        {% if news.featured_image %}
 
-                    <div style="overflow:hidden; border-radius:20px 20px 0 0;">
+                        <div style="overflow:hidden; border-radius:20px 20px 0 0;">
 
-                        <img src="{{ news.featured_image.url }}"
-                             class="w-100"
-                             style="
+                            <img src="{{ news.featured_image.url }}"
+                                 class="w-100"
+                                 style="
                                 height:240px;
                                 object-fit:cover;
                                 transition:0.4s;
                              ">
 
-                    </div>
+                        </div>
 
-                    {% endif %}
+                        {% endif %}
 
-                    <div class="news-body">
+                        <div class="news-body">
 
-                        <div class="mb-3">
+                            <div class="mb-3">
 
                             <span style="
                                 background:red;
@@ -401,39 +456,41 @@ News Fast Live
 
                             </span>
 
-                        </div>
+                            </div>
 
-                        <h4>
+                            <h4>
 
-                            <a href="{% url 'news_detail' news.id %}"
-                               class="text-dark text-decoration-none">
+                                <a href="{% url 'news_detail' news.id %}"
+                                   class="text-dark text-decoration-none">
 
-                                {{ news.title|truncatechars:75 }}
+                                    {{ news.title|truncatechars:75 }}
 
-                            </a>
+                                </a>
 
-                        </h4>
+                            </h4>
 
-                        <p>
+                            <p>
 
-                            {{ news.text|truncatechars:120 }}
+                                {{ news.text|truncatechars:120 }}
 
-                        </p>
+                            </p>
 
-                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div class="d-flex justify-content-between align-items-center mt-4">
 
-                            <small class="text-muted">
+                                <small class="text-muted">
 
-                                {{ news.created_at|date:"d M Y" }}
+                                    {{ news.created_at|date:"d M Y" }}
 
-                            </small>
+                                </small>
 
-                            <a href="{% url 'news_detail' news.id %}"
-                               class="btn btn-danger rounded-pill px-4">
+                                <a href="{% url 'news_detail' news.id %}"
+                                   class="btn btn-danger rounded-pill px-4">
 
-                                Read More
+                                    Read More
 
-                            </a>
+                                </a>
+
+                            </div>
 
                         </div>
 
@@ -441,64 +498,62 @@ News Fast Live
 
                 </div>
 
+                {% endfor %}
+
             </div>
 
-            {% endfor %}
+        </div>
+
+        <!-- TRENDING -->
+
+        <div class="col-lg-4">
+
+            <h2 class="section-title">
+                Trending
+            </h2>
+
+            <div class="trending-box">
+
+                {% for news in trending_news %}
+
+                <div class="trending-item">
+
+                    <div class="trend-number">
+
+                        {{ forloop.counter }}
+
+                    </div>
+
+                    <div>
+
+                        <a href="{% url 'news_detail' news.id %}"
+                           class="text-dark text-decoration-none">
+
+                            <h6 class="fw-bold">
+
+                                {{ news.title|truncatechars:70 }}
+
+                            </h6>
+
+                        </a>
+
+                        <small class="text-muted">
+
+                            {{ news.created_at|date:"d M Y" }}
+
+                        </small>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
 
         </div>
 
     </div>
-
-    <!-- TRENDING -->
-
-    <div class="col-lg-4">
-
-        <h2 class="section-title">
-            Trending
-        </h2>
-
-        <div class="trending-box">
-
-            {% for news in trending_news %}
-
-            <div class="trending-item">
-
-                <div class="trend-number">
-
-                    {{ forloop.counter }}
-
-                </div>
-
-                <div>
-
-                    <a href="{% url 'news_detail' news.id %}"
-                       class="text-dark text-decoration-none">
-
-                        <h6 class="fw-bold">
-
-                            {{ news.title|truncatechars:70 }}
-
-                        </h6>
-
-                    </a>
-
-                    <small class="text-muted">
-
-                        {{ news.created_at|date:"d M Y" }}
-
-                    </small>
-
-                </div>
-
-            </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-</div>
 
     <!-- CATEGORY NEWS -->
 
