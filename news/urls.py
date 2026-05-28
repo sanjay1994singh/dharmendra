@@ -2,5 +2,10 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('detail/<int:id>/', views.detail, name='detail'),
+    path('', views.home, name='home'),
+    path('news_detail/<int:id>/', views.news_detail, name='news_detail'),
+
+    path('category/<int:id>/', views.category_news, name='category_news'),
+
+    path('load-more/<int:id>/', views.load_more_news, name='load_more_news'),
 ]
