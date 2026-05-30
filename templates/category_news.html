@@ -8,53 +8,59 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container">
 
-    <div class="d-flex justify-content-between align-items-center mb-5">
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <h1 class="fw-bold">
-
+        <h2 class="fw-bold">
             {{ selected_category.name }}
-
-        </h1>
+        </h2>
 
         <button id="loadMoreBtn"
-                class="btn btn-danger rounded-pill px-4 py-2">
+                class="btn btn-primary rounded-pill px-4 py-2"
+                style="background:linear-gradient(90deg,var(--primary),var(--secondary)); border:none;">
 
-            Load More News
-
+            Load More
         </button>
 
     </div>
 
+    <!-- NEWS GRID -->
     <div class="row" id="newsContainer">
 
         {% for news in page_obj %}
 
         <div class="col-lg-3 col-md-6 mb-4">
-            <a href="{% url 'news_detail' news.id %}"
-               class="text-dark">
-                <div class="news-card">
 
-                    <img src="{{ news.featured_image.url }}">
+            <a href="{% url 'news_detail' news.id %}" class="text-decoration-none">
+
+                <div class="glass-card news-card h-100 overflow-hidden">
+
+                    {% if news.featured_image %}
+                    <img src="{{ news.featured_image.url }}"
+                         class="img-fluid w-100"
+                         style="height:180px; object-fit:cover;">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x200"
+                         class="img-fluid w-100"
+                         style="height:180px; object-fit:cover;">
+                    {% endif %}
 
                     <div class="p-3">
 
-                        <h5 class="fw-bold">
+                        <h6 class="fw-bold text-dark">
+                            {{ news.title|truncatechars:70 }}
+                        </h6>
 
-                            {{ news.title|truncatechars:60 }}
-
-                        </h5>
-
-                        <p class="text-muted">
-
-                            {{ news.text|truncatechars:100 }}
-
+                        <p class="text-muted small mb-0">
+                            {{ news.text|truncatechars:110 }}
                         </p>
 
                     </div>
 
                 </div>
+
             </a>
 
         </div>
@@ -65,73 +71,62 @@
 
 </div>
 
+<!-- AJAX LOAD MORE -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
 
-    let page = 2;
+let page = 2;
 
-    $("#loadMoreBtn").click(function(){
+$("#loadMoreBtn").click(function () {
 
-        $.ajax({
+    $.ajax({
+        url: "/load-more/{{ selected_category.id }}/?page=" + page,
+        method: "GET",
 
-            url: "/load-more/{{ selected_category.id }}/?page=" + page,
+        success: function (response) {
 
-            method: "GET",
+            let html = "";
 
-            success: function(response){
+            response.data.forEach(function (news) {
 
-                let html = "";
+                html += `
+                <div class="col-lg-3 col-md-6 mb-4">
 
-                response.data.forEach(function(news){
+                    <div class="glass-card news-card h-100 overflow-hidden">
 
-                    html += `
+                        <img src="${news.image || 'https://via.placeholder.com/400x200'}"
+                             class="img-fluid w-100"
+                             style="height:180px; object-fit:cover;">
 
-                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="p-3">
 
-                        <div class="news-card">
+                            <h6 class="fw-bold text-dark">
+                                ${news.title}
+                            </h6>
 
-                            <img src="${news.image}">
-
-                            <div class="p-3">
-
-                                <h5 class="fw-bold">
-
-                                    ${news.title}
-
-                                </h5>
-
-                                <p class="text-muted">
-
-                                    ${news.text}
-
-                                </p>
-
-                            </div>
+                            <p class="text-muted small mb-0">
+                                ${news.text}
+                            </p>
 
                         </div>
 
                     </div>
 
-                    `;
+                </div>
+                `;
+            });
 
-                });
+            $("#newsContainer").append(html);
+            page++;
 
-                $("#newsContainer").append(html);
-
-                page++;
-
-                if(!response.has_next){
-
-                    $("#loadMoreBtn").hide();
-
-                }
-
+            if (!response.has_next) {
+                $("#loadMoreBtn").hide();
             }
-
-        });
-
+        }
     });
+
+});
 
 </script>
 
