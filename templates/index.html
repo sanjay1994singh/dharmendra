@@ -1,549 +1,318 @@
-<!-- templates/index.html -->
-
 {% extends 'base.html' %}
 
 {% block title %}
-News Fast Live
+News Fast Live | Latest Breaking News
 {% endblock %}
 
 {% block content %}
 
 <style>
 
-    /* BREAKING */
-
-    .breaking-wrapper{
-        background:#111;
-        color:#fff;
-        border-radius:18px;
-        padding:18px 25px;
-        margin:30px 0;
-        overflow:hidden;
-        display:flex;
-        gap:20px;
-        align-items:center;
+    .dashboard-grid{
+        display:grid;
+        grid-template-columns:2fr 1fr;
+        gap:25px;
+        margin-bottom:50px;
     }
 
-    .breaking-badge{
-        background:red;
-        padding:10px 18px;
-        border-radius:10px;
-        font-weight:800;
+    .hero-card{
+        position:relative;
+        height:650px;
+        border-radius:30px;
+        overflow:hidden;
+        border:1px solid rgba(255,255,255,.08);
     }
 
-    .breaking-scroll{
-        overflow:hidden;
-        white-space:nowrap;
+    .hero-card img{
         width:100%;
+        height:100%;
+        object-fit:cover;
     }
 
-    .breaking-scroll span{
+    .hero-overlay{
+        position:absolute;
+        inset:0;
+        background:linear-gradient(
+            to top,
+            rgba(0,0,0,.95),
+            transparent
+        );
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        padding:40px;
+    }
+
+    .hero-badge{
         display:inline-block;
-        padding-left:100%;
-        animation:breaking 60s linear infinite;
+        background:linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+        color:white;
+        padding:8px 16px;
+        border-radius:30px;
+        font-size:12px;
+        font-weight:700;
+        margin-bottom:15px;
     }
 
-    @keyframes breaking{
-        0%{
-            transform:translateX(0);
-        }
-        100%{
-            transform:translateX(-100%);
-        }
+    .hero-title{
+        font-size:42px;
+        font-weight:900;
+        color:white;
+        line-height:1.3;
     }
 
+    .hero-desc{
+        color:#cbd5e1;
+        margin-top:15px;
+    }
 
-
-    /* SECTION */
+    .side-card{
+        background:rgba(17,24,39,.8);
+        backdrop-filter:blur(15px);
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:28px;
+        padding:25px;
+        margin-bottom:20px;
+    }
 
     .section-title{
-        font-size:38px;
+        font-size:32px;
         font-weight:900;
-        margin-bottom:35px;
+        margin-bottom:25px;
+        color:white;
     }
 
-    /* NEWS */
-
-    .news-card img{
-        height:240px;
-    }
-
-    .news-body{
-        padding:22px;
-    }
-
-    .news-body h4{
-        font-size:22px;
-        font-weight:800;
-        line-height:1.5;
-    }
-
-    .news-body p{
-        color:#666;
-        margin-top:10px;
-    }
-
-    /* TRENDING */
-
-    .trending-box{
-        background:#fff;
-        border-radius:24px;
-        padding:25px;
-        box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    .live-btn{
+        display:block;
+        text-align:center;
+        background:linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+        color:white;
+        padding:14px;
+        border-radius:50px;
+        font-weight:700;
     }
 
     .trending-item{
-        display:flex;
-        gap:15px;
-        padding:18px 0;
-        border-bottom:1px solid #eee;
+        padding:15px 0;
+        border-bottom:1px solid rgba(255,255,255,.08);
     }
 
     .trending-item:last-child{
         border:none;
     }
 
-    .trend-number{
-        width:38px;
-        height:38px;
-        background:red;
-        color:#fff;
-        border-radius:50%;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-weight:800;
+    .trending-item a{
+        color:white;
     }
 
-    /* CATEGORY SECTION */
+    .news-grid{
+        display:grid;
+        grid-template-columns:
+        repeat(auto-fill,minmax(320px,1fr));
+        gap:25px;
+    }
+
+    .news-card{
+        background:rgba(17,24,39,.8);
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:24px;
+        overflow:hidden;
+        transition:.3s;
+        height:100%;
+    }
+
+    .news-card:hover{
+        transform:translateY(-6px);
+    }
+
+    .news-card img{
+        width:100%;
+        height:230px;
+        object-fit:cover;
+    }
+
+    .news-body{
+        padding:22px;
+    }
+
+    .news-category{
+        display:inline-block;
+        padding:6px 14px;
+        border-radius:30px;
+        background:linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+        color:white;
+        font-size:12px;
+        font-weight:700;
+        margin-bottom:15px;
+    }
+
+    .news-title{
+        color:white;
+        font-size:20px;
+        font-weight:700;
+        line-height:1.5;
+    }
+
+    .news-text{
+        color:#94a3b8;
+        margin-top:10px;
+    }
 
     .category-section{
         margin-top:80px;
     }
 
-    /* PAGINATION */
-
-    .pagination-wrapper{
+    .category-header{
         display:flex;
-        justify-content:center;
-        gap:10px;
-        margin-top:50px;
-        flex-wrap:wrap;
-    }
-
-    .pagination-wrapper a,
-    .pagination-wrapper span{
-        width:48px;
-        height:48px;
-        background:#fff;
-        display:flex;
+        justify-content:space-between;
         align-items:center;
-        justify-content:center;
-        border-radius:14px;
-        color:#111;
-        font-weight:700;
-        box-shadow:0 5px 15px rgba(0,0,0,0.08);
+        margin-bottom:25px;
     }
 
-    .pagination-wrapper .active{
-        background:red;
-        color:#fff;
+    .view-all-btn{
+        background:linear-gradient(
+            90deg,
+            var(--primary),
+            var(--secondary)
+        );
+        color:white;
+        padding:12px 24px;
+        border-radius:40px;
     }
 
-</style>
-
-<!-- HERO SECTION NEW STYLE -->
-
-<style>
-
-.hero-wall{
-    margin-top:30px;
-    margin-bottom:60px;
-}
-
-/* LEFT BIG STORY */
-
-.hero-big{
-    position:relative;
-    height:720px;
-    border-radius:28px;
-    overflow:hidden;
-    box-shadow:0 20px 50px rgba(0,0,0,0.15);
-}
-
-.hero-big img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-.hero-tag{
-    position:absolute;
-    top:20px;
-    left:20px;
-    background:#ff0000;
-    color:#fff;
-    padding:8px 18px;
-    border-radius:30px;
-    font-size:12px;
-    font-weight:800;
-    z-index:2;
-}
-
-.hero-bottom{
-    position:absolute;
-    bottom:0;
-    left:0;
-    right:0;
-    padding:30px;
-    background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-    color:#fff;
-}
-
-.hero-bottom h1{
-    font-size:42px;
-    font-weight:900;
-    line-height:1.3;
-    margin-bottom:10px;
-}
-
-.hero-bottom p{
-    font-size:16px;
-    opacity:0.9;
-}
-
-/* RIGHT STACK */
-
-.hero-stack{
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-}
-
-.stack-card{
-    position:relative;
-    height:230px;
-    border-radius:22px;
-    overflow:hidden;
-    box-shadow:0 10px 25px rgba(0,0,0,0.12);
-}
-
-.stack-card img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transition:0.4s;
-}
-
-.stack-card:hover img{
-    transform:scale(1.08);
-}
-
-.stack-overlay{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-}
-
-.stack-text{
-    position:absolute;
-    bottom:15px;
-    left:15px;
-    right:15px;
-    color:#fff;
-}
-
-.stack-text h4{
-    font-size:18px;
-    font-weight:800;
-    line-height:1.4;
-}
-
-.stack-tag{
-    display:inline-block;
-    background:rgba(255,0,0,0.9);
-    padding:5px 12px;
-    border-radius:20px;
-    font-size:11px;
-    margin-bottom:8px;
-    font-weight:700;
-}
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .hero-big{
-        height:420px;
-        margin-bottom:20px;
+    .mini-card{
+        background:rgba(17,24,39,.8);
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:22px;
+        overflow:hidden;
+        height:100%;
     }
 
-    .hero-bottom h1{
-        font-size:26px;
-    }
-
-    .stack-card{
+    .mini-card img{
+        width:100%;
         height:180px;
+        object-fit:cover;
     }
 
-}
+    .mini-body{
+        padding:18px;
+    }
+
+    .mini-body h6{
+        color:white;
+        font-weight:700;
+        line-height:1.5;
+    }
+
+    @media(max-width:991px){
+
+        .dashboard-grid{
+            grid-template-columns:1fr;
+        }
+
+        .hero-card{
+            height:450px;
+        }
+
+        .hero-title{
+            font-size:28px;
+        }
+
+    }
 
 </style>
-
-
 
 <div class="container">
 
-    <!-- BREAKING -->
+    <!-- HERO SECTION -->
 
-    <div class="breaking-wrapper">
+    <div class="dashboard-grid">
 
-        <div class="breaking-badge">
-            BREAKING
-        </div>
-
-        <div class="breaking-scroll">
-
-            <span>
-
-                {% for news in breaking_news %}
-
-                    {{ news.title }} •
-
-                {% endfor %}
-
-            </span>
-
-        </div>
-
-    </div>
-    <!-- HERO SECTION START -->
-
-
-
-    <div class="hero-wall">
-
-    <div class="row">
-
-        <!-- BIG FEATURE STORY -->
-
-        <div class="col-lg-8">
+        <div>
 
             {% for hero in latest_news|slice:":1" %}
-            <a href="{% url 'news_detail' hero.id %}" class="text-white text-decoration-none">
-            <div class="hero-big">
 
-                {% if hero.featured_image %}
-                <img src="{{ hero.featured_image.url }}">
-                {% endif %}
+            <a href="{% url 'news_detail' hero.id %}">
 
-                <div class="hero-tag">
-                    BREAKING
+                <div class="hero-card">
+
+                    {% if hero.featured_image %}
+                    <img src="{{ hero.featured_image.url }}">
+                    {% endif %}
+
+                    <div class="hero-overlay">
+
+                        <span class="hero-badge">
+                            BREAKING NEWS
+                        </span>
+
+                        <h1 class="hero-title">
+                            {{ hero.title|truncatechars:150 }}
+                        </h1>
+
+                        <p class="hero-desc">
+                            {{ hero.text|truncatechars:220 }}
+                        </p>
+
+                    </div>
+
                 </div>
 
-                <div class="hero-bottom">
-
-                    <h1>
-                        {{ hero.title|truncatechars:120 }}
-                    </h1>
-
-                    <p>
-                        {{ hero.text|truncatechars:180 }}
-                    </p>
-
-                </div>
-
-            </div>
             </a>
 
             {% endfor %}
 
         </div>
 
-        <!-- STACKED NEWS -->
+        <div>
 
-        <div class="col-lg-4">
+            <div class="side-card">
 
-            <div class="hero-stack">
+                <h4 class="mb-3">
+                    🔴 Live News TV
+                </h4>
 
-                {% for news in trending_news|slice:":3" %}
+                <p class="text-secondary">
+                    Watch live news coverage and breaking updates.
+                </p>
 
-                <div class="stack-card">
+                <a href="https://www.youtube.com/@newsfastlive1810"
+                   target="_blank"
+                   class="live-btn">
 
-                    {% if news.featured_image %}
-                    <img src="{{ news.featured_image.url }}">
-                    {% endif %}
+                    Watch Live
 
-                    <div class="stack-overlay"></div>
-
-                    <div class="stack-text">
-
-                        <div class="stack-tag">
-                            TRENDING
-                        </div>
-
-                        <h4>
-                            <a href="{% url 'news_detail' news.id %}" class="text-white text-decoration-none">
-                                {{ news.title|truncatechars:70 }}
-                            </a>
-                        </h4>
-
-                    </div>
-
-                </div>
-
-                {% endfor %}
+                </a>
 
             </div>
 
-        </div>
+            <div class="side-card">
 
-    </div>
+                <h4 class="mb-4">
+                    Trending Stories
+                </h4>
 
-</div>
-
-    <!-- HERO SECTION END -->
-
-
-    <!-- LATEST NEWS -->
-
-    <div class="row mt-5">
-
-        <div class="col-lg-8">
-
-            <h2 class="section-title">
-                Latest Headlines
-            </h2>
-
-            <div class="row">
-
-                {% for news in page_obj|slice:":4" %}
-
-                <div class="col-md-6 mb-4">
-
-                    <div class="news-card h-100">
-
-                        {% if news.featured_image %}
-
-                        <div style="overflow:hidden; border-radius:20px 20px 0 0;">
-
-                            <img src="{{ news.featured_image.url }}"
-                                 class="w-100"
-                                 style="
-                                height:240px;
-                                object-fit:cover;
-                                transition:0.4s;
-                             ">
-
-                        </div>
-
-                        {% endif %}
-
-                        <div class="news-body">
-
-                            <div class="mb-3">
-
-                            <span style="
-                                background:red;
-                                color:#fff;
-                                padding:6px 14px;
-                                border-radius:30px;
-                                font-size:12px;
-                                font-weight:700;
-                            ">
-
-                                {{ news.category.name }}
-
-                            </span>
-
-                            </div>
-
-                            <h4>
-
-                                <a href="{% url 'news_detail' news.id %}"
-                                   class="text-dark text-decoration-none">
-
-                                    {{ news.title|truncatechars:75 }}
-
-                                </a>
-
-                            </h4>
-
-                            <p>
-
-                                {{ news.text|truncatechars:120 }}
-
-                            </p>
-
-                            <div class="d-flex justify-content-between align-items-center mt-4">
-
-                                <small class="text-muted">
-
-                                    {{ news.created_at|date:"d M Y" }}
-
-                                </small>
-
-                                <a href="{% url 'news_detail' news.id %}"
-                                   class="btn btn-danger rounded-pill px-4">
-
-                                    Read More
-
-                                </a>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                {% endfor %}
-
-            </div>
-
-        </div>
-
-        <!-- TRENDING -->
-
-        <div class="col-lg-4">
-
-            <h2 class="section-title">
-                Trending
-            </h2>
-
-            <div class="trending-box">
-
-                {% for news in trending_news %}
+                {% for news in trending_news|slice:":6" %}
 
                 <div class="trending-item">
 
-                    <div class="trend-number">
+                    <a href="{% url 'news_detail' news.id %}">
 
-                        {{ forloop.counter }}
+                        {{ news.title|truncatechars:70 }}
 
-                    </div>
-
-                    <div>
-
-                        <a href="{% url 'news_detail' news.id %}"
-                           class="text-dark text-decoration-none">
-
-                            <h6 class="fw-bold">
-
-                                {{ news.title|truncatechars:70 }}
-
-                            </h6>
-
-                        </a>
-
-                        <small class="text-muted">
-
-                            {{ news.created_at|date:"d M Y" }}
-
-                        </small>
-
-                    </div>
+                    </a>
 
                 </div>
 
@@ -555,13 +324,69 @@ News Fast Live
 
     </div>
 
-    <!-- CATEGORY NEWS -->
+    <!-- LATEST NEWS -->
+
+    <h2 class="section-title">
+
+        Latest Headlines
+
+    </h2>
+
+    <div class="news-grid">
+
+        {% for news in page_obj %}
+
+        <a href="{% url 'news_detail' news.id %}">
+
+            <div class="news-card">
+
+                {% if news.featured_image %}
+                <img src="{{ news.featured_image.url }}">
+                {% endif %}
+
+                <div class="news-body">
+
+                    <span class="news-category">
+
+                        {{ news.category.name }}
+
+                    </span>
+
+                    <h3 class="news-title">
+
+                        {{ news.title|truncatechars:85 }}
+
+                    </h3>
+
+                    <p class="news-text">
+
+                        {{ news.text|truncatechars:120 }}
+
+                    </p>
+
+                    <small class="text-secondary">
+
+                        {{ news.created_at|date:"d M Y" }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- CATEGORY SECTIONS -->
 
     {% for item in category_news %}
 
     <div class="category-section">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="category-header">
 
             <h2 class="section-title m-0">
 
@@ -570,7 +395,7 @@ News Fast Live
             </h2>
 
             <a href="{% url 'category_news' item.category.id %}"
-               class="btn btn-danger rounded-pill px-4">
+               class="view-all-btn">
 
                 View All
 
@@ -584,28 +409,27 @@ News Fast Live
 
             <div class="col-lg-3 col-md-6 mb-4">
 
-                <div class="news-card">
+                <a href="{% url 'news_detail' news.id %}">
 
-                    {% if news.featured_image %}
-                    <img src="{{ news.featured_image.url }}">
-                    {% endif %}
+                    <div class="mini-card">
 
-                    <div class="news-body">
+                        {% if news.featured_image %}
+                        <img src="{{ news.featured_image.url }}">
+                        {% endif %}
 
-                        <h5 class="fw-bold">
+                        <div class="mini-body">
 
-                            <a href="{% url 'news_detail' news.id %}"
-                               class="text-dark">
+                            <h6>
 
-                                {{ news.title|truncatechars:55 }}
+                                {{ news.title|truncatechars:60 }}
 
-                            </a>
+                            </h6>
 
-                        </h5>
+                        </div>
 
                     </div>
 
-                </div>
+                </a>
 
             </div>
 
