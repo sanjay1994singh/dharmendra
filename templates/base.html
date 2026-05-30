@@ -13,195 +13,171 @@
 
 <style>
 
-:root {
+/* ================= ROOT LIGHT THEME ================= */
+:root{
     --bg:#f5f7fb;
     --card:#ffffff;
-    --primary:#00a3c4;
-    --secondary:#6d28d9;
-    --success:#16a34a;
-    --text:#0f172a;
-    --muted:#64748b;
+
+    --primary:#2563eb;
+    --secondary:#7c3aed;
+    --accent:#f97316;
+
+    --text:#0b1220;
+    --muted:#6b7280;
+
     --border:rgba(15,23,42,.08);
 }
 
-/* RESET */
-*{margin:0;padding:0;box-sizing:border-box;}
+/* ================= GLOBAL ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
 body{
-    background:var(--bg);
+    background:linear-gradient(180deg,#f5f7fb,#eef2ff);
     color:var(--text);
     font-family:'Poppins',sans-serif;
-    overflow-x:hidden;
 }
 
-/* SOFT BACKGROUND GLOW */
-body::before{
-    content:'';
-    position:fixed;
-    width:500px;height:500px;
-    background:var(--primary);
-    filter:blur(250px);
-    opacity:.08;
-    top:-100px;right:-100px;
-    z-index:-1;
-}
-
-body::after{
-    content:'';
-    position:fixed;
-    width:500px;height:500px;
-    background:var(--secondary);
-    filter:blur(250px);
-    opacity:.08;
-    bottom:-100px;left:-100px;
-    z-index:-1;
-}
-
-/* BREAKING BAR */
+/* ================= BREAKING BAR ================= */
 .breaking-bar{
-    background:linear-gradient(90deg,var(--primary),var(--secondary));
-    color:#fff;
-    font-weight:700;
+    background: linear-gradient(90deg,#ef4444,#f97316);
+    color:white;
+    font-weight:800;
     padding:10px 0;
     font-size:14px;
 }
 
-/* NAVBAR */
+/* ================= NAVBAR ================= */
 .main-navbar{
     position:sticky;
     top:0;
     z-index:9999;
     background:rgba(255,255,255,.85);
-    backdrop-filter:blur(15px);
+    backdrop-filter:blur(12px);
     border-bottom:1px solid var(--border);
 }
 
-.site-logo{
-    width:55px;height:55px;
-    border-radius:12px;
-}
-
-.brand-title{
-    font-size:24px;
+.navbar-brand{
     font-weight:900;
-    color:var(--text);
-}
-
-.brand-sub{
-    font-size:11px;
-    letter-spacing:3px;
-    color:var(--muted);
+    letter-spacing:1px;
+    color:var(--text)!important;
 }
 
 .nav-link{
-    color:var(--text) !important;
+    color:var(--text)!important;
     font-weight:600;
+    margin:0 8px;
+    transition:.3s;
 }
 
 .nav-link:hover{
-    color:var(--primary) !important;
+    color:var(--primary)!important;
 }
 
-/* SEARCH */
-.search-box{
-    background:#fff;
-    border:1px solid var(--border);
-    border-radius:50px;
-}
-
-.search-btn{
-    border:none;
-    padding:10px 22px;
-    border-radius:50px;
-    color:#fff;
-    font-weight:600;
-    background:linear-gradient(90deg,var(--primary),var(--secondary));
-}
-
-/* CATEGORY BAR */
+/* ================= CATEGORY BAR ================= */
 .category-navbar{
     background:#fff;
     border-bottom:1px solid var(--border);
+    padding:10px 0;
+    overflow-x:auto;
 }
 
 .category-scroll{
     display:flex;
-    gap:12px;
-    overflow-x:auto;
-    padding:14px 0;
-    scrollbar-width:none;
+    gap:10px;
+    white-space:nowrap;
 }
 
-.category-scroll::-webkit-scrollbar{display:none;}
-
 .category-link{
+    display:inline-block;
+    padding:8px 14px;
+    border-radius:999px;
     background:#f1f5f9;
     color:var(--text);
-    padding:10px 18px;
-    border-radius:50px;
-    border:1px solid var(--border);
+    text-decoration:none;
+    font-size:13px;
     transition:.3s;
-    white-space:nowrap;
+    border:1px solid var(--border);
 }
 
 .category-link:hover{
     background:linear-gradient(90deg,var(--primary),var(--secondary));
-    color:#fff;
+    color:white;
 }
 
-/* PAGE */
+/* ================= MAIN WRAPPER ================= */
 .page-wrapper{
     min-height:80vh;
-    padding:35px 0 80px;
+    padding:30px 0;
 }
 
-/* CARD */
-.glass-card{
+/* ================= BUTTON ================= */
+.btn-gradient{
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    color:white;
+    border:none;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-gradient:hover{
+    transform:scale(1.05);
+}
+
+/* ================= CARD ================= */
+.card-ui{
     background:var(--card);
     border:1px solid var(--border);
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,.05);
+    border-radius:18px;
+    overflow:hidden;
+    transition:.3s;
 }
 
-/* NEWSLETTER */
-.newsletter{
-    margin-top:80px;
-    background:linear-gradient(135deg,var(--primary),var(--secondary));
-    padding:90px 0;
-    text-align:center;
-    color:#fff;
+.card-ui:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 35px rgba(37,99,235,.12);
 }
 
-/* FOOTER */
+/* ================= FOOTER ================= */
 footer{
     background:#fff;
+    padding:50px 0;
+    text-align:center;
     border-top:1px solid var(--border);
-    padding:70px 0 30px;
-    color:var(--text);
 }
 
-.footer-title{
-    font-weight:900;
-}
-
-.footer-link{
-    color:var(--muted);
-}
-
-.footer-link:hover{
-    color:var(--primary);
-}
-
-/* LIVE BUTTON */
+/* ================= LIVE BUTTON ================= */
 .live-tv-btn{
     position:fixed;
     right:20px;
     bottom:20px;
-    padding:15px 24px;
+    padding:14px 22px;
     border-radius:50px;
-    color:#fff;
-    font-weight:700;
     background:linear-gradient(90deg,var(--primary),var(--secondary));
-    box-shadow:0 15px 40px rgba(0,163,196,.25);
+    color:white;
+    font-weight:700;
+    text-decoration:none;
+    box-shadow:0 10px 30px rgba(37,99,235,.2);
+}
+
+.live-tv-btn:hover{
+    transform:scale(1.05);
+}
+
+/* ================= SCROLLBAR ================= */
+::-webkit-scrollbar{
+    height:6px;
+    width:6px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:var(--primary);
+    border-radius:10px;
 }
 
 </style>
@@ -211,84 +187,67 @@ footer{
 
 <body>
 
+<!-- BREAKING -->
 <div class="breaking-bar">
-<marquee>🔥 Breaking News • Politics • Crime • Sports • Business • Entertainment • News Fast Live</marquee>
+<marquee>🔥 Breaking News • Politics • Sports • Business • Technology • India • World • Entertainment</marquee>
 </div>
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg main-navbar">
 <div class="container">
 
-<a class="navbar-brand d-flex align-items-center gap-3" href="/">
-<img src="{% static 'assets/img/logo/logo.png' %}" class="site-logo">
-<div>
-<div class="brand-title">NEWS FAST LIVE</div>
-<div class="brand-sub">DIGITAL NEWSROOM</div>
-</div>
-</a>
+<a class="navbar-brand" href="/">NEWS FAST LIVE</a>
 
-<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
 <span class="navbar-toggler-icon"></span>
 </button>
 
-<div class="collapse navbar-collapse" id="mainNavbar">
+<div class="collapse navbar-collapse" id="nav">
 
 <ul class="navbar-nav mx-auto">
-<li><a class="nav-link" href="/">Home</a></li>
-<li><a class="nav-link" href="#">Latest</a></li>
-<li><a class="nav-link" href="#">Trending</a></li>
-<li><a class="nav-link" href="#">Videos</a></li>
-<li><a class="nav-link" href="#">Magazine</a></li>
+<li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Latest</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Trending</a></li>
+<li class="nav-item"><a class="nav-link" href="#">Videos</a></li>
 </ul>
 
-<form class="d-flex gap-2">
-<input type="search" class="form-control search-box" placeholder="Search News...">
-<button class="search-btn">Search</button>
-</form>
-
 </div>
+
 </div>
 </nav>
 
-<!-- CATEGORY -->
+<!-- CATEGORY BAR -->
 <div class="category-navbar">
-<div class="container">
-<div class="category-scroll">
+<div class="container category-scroll">
+
 <a href="/" class="category-link">All</a>
+
 {% for category in categories %}
 <a href="{% url 'category_news' category.id %}" class="category-link">
 {{ category.name }}
 </a>
 {% endfor %}
-</div>
+
 </div>
 </div>
 
 <!-- CONTENT -->
-<div class="page-wrapper">
+<div class="container page-wrapper">
 {% block content %}{% endblock %}
 </div>
 
-<!-- NEWSLETTER -->
-<section class="newsletter">
-<div class="container">
-<h2>Stay Updated With News Fast Live</h2>
-<p>Breaking news alerts, exclusive reports and updates.</p>
-</div>
-</section>
-
 <!-- FOOTER -->
 <footer>
-<div class="container text-center">
-<h2 class="footer-title">News Fast Live</h2>
-<p class="text-secondary">India's Modern Digital News Platform</p>
-</div>
+<h5>News Fast Live</h5>
+<p class="text-muted">Modern Digital News Platform</p>
 </footer>
 
+<!-- LIVE BUTTON -->
 <a href="https://www.youtube.com/@newsfastlive1810" class="live-tv-btn" target="_blank">
 🔴 LIVE TV
 </a>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
