@@ -3,6 +3,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.utils.html import strip_tags
 
 from .models import *
 
@@ -162,7 +163,7 @@ def load_more_news(request, id):
 
             'title': item.title,
 
-            'text': item.text[:120],
+            'text': strip_tags(item.text or '')[:120],
 
             'image': item.featured_image.url if item.featured_image else ''
 

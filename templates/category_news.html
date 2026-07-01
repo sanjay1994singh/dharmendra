@@ -1,133 +1,88 @@
-<!-- category_news.html -->
-
 {% extends 'base.html' %}
 
-{% block title %}
-{{ selected_category.name }} | News Fast Live
-{% endblock %}
+{% block title %}{{ selected_category.name }} | News Fast Live{% endblock %}
 
 {% block content %}
+<section class="archive-header">
+    <span>Category</span>
+    <h1>{{ selected_category.name }}</h1>
+    {% if selected_category.desc %}
+    <p>{{ selected_category.desc }}</p>
+    {% endif %}
+</section>
 
-<div class="container">
-
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <h2 class="fw-bold">
-            {{ selected_category.name }}
-        </h2>
-
-        <button id="loadMoreBtn"
-                class="btn btn-primary rounded-pill px-4 py-2"
-                style="background:linear-gradient(90deg,var(--primary),var(--secondary)); border:none;">
-
-            Load More
-        </button>
-
-    </div>
-
-    <!-- NEWS GRID -->
-    <div class="row" id="newsContainer">
-
+<section class="content-band">
+    <div class="news-grid" id="newsContainer">
         {% for news in page_obj %}
-
-        <div class="col-lg-3 col-md-6 mb-4">
-
-            <a href="{% url 'news_detail' news.id %}" class="text-decoration-none">
-
-                <div class="glass-card news-card h-100 overflow-hidden">
-
-                    {% if news.featured_image %}
-                    <img src="{{ news.featured_image.url }}"
-                         class="img-fluid w-100"
-                         style="height:180px; object-fit:cover;">
-                    {% else %}
-                    <img src="https://via.placeholder.com/400x200"
-                         class="img-fluid w-100"
-                         style="height:180px; object-fit:cover;">
-                    {% endif %}
-
-                    <div class="p-3">
-
-                        <h6 class="fw-bold text-dark">
-                            {{ news.title|truncatechars:70 }}
-                        </h6>
-
-                        <p class="text-muted small mb-0">
-                            {{ news.text|truncatechars:110 }}
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </a>
-
-        </div>
-
+        <a href="{% url 'news_detail' news.id %}" class="news-card">
+            <div class="thumb-frame">
+                {% if news.featured_image %}
+                <img src="{{ news.featured_image.url }}" alt="{{ news.title }}">
+                {% endif %}
+            </div>
+            <div class="news-card-body">
+                <span class="story-kicker">{{ selected_category.name }}</span>
+                <h3>{{ news.title|truncatechars:86 }}</h3>
+                <p>{{ news.text|striptags|truncatechars:120 }}</p>
+                <small>{{ news.created_at|date:"d M Y" }}</small>
+            </div>
+        </a>
         {% endfor %}
-
     </div>
 
-</div>
+    {% if page_obj.has_next %}
+    <div class="load-more-wrap">
+        <button id="loadMoreBtn" class="load-more-btn">
+            <span>Load More</span>
+            <i class="bi bi-arrow-down-circle"></i>
+        </button>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
 
-<!-- AJAX LOAD MORE -->
+{% block js %}
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
 <script>
-
 let page = 2;
 
 $("#loadMoreBtn").click(function () {
+    const button = $(this);
+    button.prop("disabled", true).find("span").text("Loading...");
 
     $.ajax({
         url: "/load-more/{{ selected_category.id }}/?page=" + page,
         method: "GET",
-
         success: function (response) {
-
             let html = "";
 
             response.data.forEach(function (news) {
-
+                const image = news.image ? `<img src="${news.image}" alt="${news.title}">` : "";
                 html += `
-                <div class="col-lg-3 col-md-6 mb-4">
-
-                    <div class="glass-card news-card h-100 overflow-hidden">
-
-                        <img src="${news.image || 'https://via.placeholder.com/400x200'}"
-                             class="img-fluid w-100"
-                             style="height:180px; object-fit:cover;">
-
-                        <div class="p-3">
-
-                            <h6 class="fw-bold text-dark">
-                                ${news.title}
-                            </h6>
-
-                            <p class="text-muted small mb-0">
-                                ${news.text}
-                            </p>
-
-                        </div>
-
+                <a href="/news_detail/${news.id}/" class="news-card">
+                    <div class="thumb-frame">${image}</div>
+                    <div class="news-card-body">
+                        <span class="story-kicker">{{ selected_category.name }}</span>
+                        <h3>${news.title}</h3>
+                        <p>${news.text}</p>
+                        <small>Latest update</small>
                     </div>
-
-                </div>
-                `;
+                </a>`;
             });
 
             $("#newsContainer").append(html);
             page++;
 
             if (!response.has_next) {
-                $("#loadMoreBtn").hide();
+                button.closest(".load-more-wrap").hide();
+            } else {
+                button.prop("disabled", false).find("span").text("Load More");
             }
+        },
+        error: function () {
+            button.prop("disabled", false).find("span").text("Try Again");
         }
     });
-
 });
-
 </script>
-
 {% endblock %}
