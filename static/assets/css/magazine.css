@@ -115,36 +115,42 @@ img{
 
 .masthead{
     display:grid;
-    grid-template-columns:220px 1fr 170px;
+    grid-template-columns:minmax(220px,270px) minmax(0,1fr) minmax(145px,180px);
     align-items:center;
-    gap:18px;
+    gap:24px;
     min-height:108px;
+    padding:12px 0;
 }
 
 .brand-mark{
     display:flex;
     align-items:center;
     gap:12px;
+    min-width:0;
 }
 
 .brand-mark img{
-    width:98px;
-    height:84px;
+    width:74px;
+    height:64px;
     object-fit:cover;
     border:1px solid var(--line);
+    flex:0 0 auto;
 }
 
 .brand-mark strong{
     display:block;
-    font-size:14px;
+    font-size:17px;
     font-weight:900;
     text-transform:uppercase;
+    line-height:1.08;
 }
 
 .brand-mark small{
     display:block;
     color:var(--muted);
-    font-size:12px;
+    font-size:13px;
+    margin-top:4px;
+    font-weight:700;
 }
 
 .masthead-title{
@@ -153,11 +159,13 @@ img{
 
 .masthead-title a{
     font-family:"Noto Serif Devanagari",Georgia,serif;
-    font-size:clamp(32px,4.5vw,62px);
-    line-height:2;
+    display:block;
+    font-size:clamp(34px,4.4vw,64px);
+    line-height:1;
     color:#090d16;
     font-weight:800;
     text-transform:uppercase;
+    white-space:nowrap;
 }
 
 .masthead-title p{
@@ -182,6 +190,7 @@ img{
     text-transform:uppercase;
     font-size:13px;
     box-shadow:6px 6px 0 #111827;
+    white-space:nowrap;
 }
 
 .watch-live:hover{
@@ -1145,14 +1154,32 @@ img{
 
 @media (max-width:1100px){
     .masthead{
-        grid-template-columns:1fr;
+        grid-template-columns:minmax(170px,240px) minmax(0,1fr) auto;
         text-align:center;
-        padding:18px 0;
+        gap:14px;
+        padding:12px 0;
     }
 
-    .brand-mark,
+    .brand-mark{
+        justify-self:start;
+        text-align:left;
+    }
+
     .watch-live{
-        justify-self:center;
+        justify-self:end;
+    }
+
+    .brand-mark img{
+        width:60px;
+        height:54px;
+    }
+
+    .brand-mark strong{
+        font-size:15px;
+    }
+
+    .masthead-title a{
+        font-size:clamp(28px,4.2vw,46px);
     }
 
     .lead-layout,
@@ -1198,17 +1225,67 @@ img{
         padding:7px 9px;
     }
 
-    .masthead-title p,
-    .brand-mark span{
+    .masthead{
+        grid-template-columns:1fr auto;
+        min-height:76px;
+        padding:10px 0;
+        text-align:left;
+        gap:8px 12px;
+    }
+
+    .brand-mark{
+        grid-column:1 / 2;
+        gap:9px;
+    }
+
+    .brand-mark img{
+        width:48px;
+        height:44px;
+    }
+
+    .brand-mark strong{
+        max-width:148px;
+        font-size:14px;
+        white-space:normal;
+    }
+
+    .brand-mark small{
+        font-size:11px;
+        margin-top:2px;
+    }
+
+    .masthead-title{
+        grid-column:1 / -1;
+        grid-row:2;
+        text-align:center;
+        margin-top:4px;
+    }
+
+    .masthead-title a{
+        font-size:clamp(30px,10vw,44px);
+        line-height:.96;
+        white-space:normal;
+    }
+
+    .masthead-title p{
         display:none;
     }
 
-    .masthead{
-        min-height:94px;
+    .watch-live{
+        grid-column:2 / 3;
+        grid-row:1;
+        box-shadow:4px 4px 0 #111827;
+        padding:9px 11px;
+        font-size:0;
+        gap:0;
     }
 
-    .watch-live{
-        box-shadow:4px 4px 0 #111827;
+    .watch-live i{
+        font-size:18px;
+    }
+
+    .watch-live span{
+        display:none;
     }
 
     .section-link{
