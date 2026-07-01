@@ -11,6 +11,9 @@ class AdvertisementAdmin(admin.ModelAdmin):
         'sponsor_name',
         'contact_phone',
         'whatsapp_number',
+        'background_color',
+        'border_color',
+        'button_bg_color',
         'is_active',
         'starts_at',
         'ends_at',
@@ -37,6 +40,21 @@ class AdvertisementAdmin(admin.ModelAdmin):
                 'image',
                 'target_url',
                 'html_code',
+            )
+        }),
+        ('Design colors', {
+            'fields': (
+                'background_color',
+                'background_color_2',
+                'border_color',
+                'badge_bg_color',
+                'badge_text_color',
+                'sponsor_text_color',
+                'title_color',
+                'subtitle_color',
+                'contact_text_color',
+                'button_bg_color',
+                'button_text_color',
             )
         }),
         ('Schedule', {

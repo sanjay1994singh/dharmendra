@@ -5,7 +5,7 @@
         <div class="ad-html">{{ ad.html_code|safe }}</div>
         {% else %}
         <div class="ad-html">
-            <div class="upmedia-ad">
+            <div class="upmedia-ad" style="--ad-bg: {{ ad.background_color }}; --ad-bg-2: {{ ad.background_color_2 }}; --ad-border: {{ ad.border_color }}; --ad-badge-bg: {{ ad.badge_bg_color }}; --ad-badge-text: {{ ad.badge_text_color }}; --ad-sponsor-text: {{ ad.sponsor_text_color }}; --ad-title-text: {{ ad.title_color }}; --ad-subtitle-text: {{ ad.subtitle_color }}; --ad-contact-text: {{ ad.contact_text_color }}; --ad-button-bg: {{ ad.button_bg_color }}; --ad-button-text: {{ ad.button_text_color }};">
                 <span class="upmedia-badge">Advertisement</span>
                 <div class="upmedia-copy">
                     {% if ad.sponsor_name %}
