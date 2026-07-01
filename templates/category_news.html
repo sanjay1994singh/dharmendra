@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
+{% load ad_tags %}
 
 {% block title %}{{ selected_category.name }} | News Fast Live{% endblock %}
 
 {% block content %}
+{% render_ad "category_top" %}
+
 <section class="archive-header">
     <span>Category</span>
     <h1>{{ selected_category.name }}</h1>
@@ -14,6 +17,9 @@
 <section class="content-band">
     <div class="news-grid" id="newsContainer">
         {% for news in page_obj %}
+        {% if forloop.counter == 5 %}
+        {% render_ad "category_in_feed" %}
+        {% endif %}
         <a href="{% url 'news_detail' news.id %}" class="news-card">
             <div class="thumb-frame">
                 {% if news.featured_image %}
@@ -39,6 +45,8 @@
     </div>
     {% endif %}
 </section>
+
+{% render_ad "category_bottom" %}
 {% endblock %}
 
 {% block js %}

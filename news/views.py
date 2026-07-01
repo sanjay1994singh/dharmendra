@@ -2,10 +2,28 @@
 
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.urls import reverse
 from django.utils.html import strip_tags
+from xml.sax.saxutils import escape
+import json
 
 from .models import *
+
+
+SITE_NAME = 'News Fast Live'
+SITE_DESCRIPTION = (
+    'News Fast Live brings latest Hindi news, breaking updates, politics, '
+    'religious, education, crime and local stories.'
+)
+
+
+def absolute_url(request, view_name, *args):
+    return request.build_absolute_uri(reverse(view_name, args=args))
+
+
+def clean_description(value, length=160):
+    return strip_tags(value or '').replace('\n', ' ').strip()[:length]
 
 
 def home(request):
@@ -50,6 +68,12 @@ def home(request):
 
         'category_news': category_news,
 
+        'seo_title': f'{SITE_NAME} - Latest Hindi News, Breaking News and Updates',
+
+        'seo_description': SITE_DESCRIPTION,
+
+        'seo_canonical': request.build_absolute_uri(reverse('home')),
+
     }
 
     return render(
@@ -90,6 +114,32 @@ def news_detail(request, id):
             news.featured_image.url
         )
 
+    article_url = absolute_url(request, 'news_detail', news.id)
+
+    article_schema = {
+        '@context': 'https://schema.org',
+        '@type': 'NewsArticle',
+        'headline': news.title or SITE_NAME,
+        'description': clean_description(news.text, 180),
+        'mainEntityOfPage': {
+            '@type': 'WebPage',
+            '@id': article_url,
+        },
+        'datePublished': news.created_at.isoformat() if news.created_at else '',
+        'dateModified': news.updated_at.isoformat() if news.updated_at else '',
+        'author': {
+            '@type': 'Person',
+            'name': news.reporter or SITE_NAME,
+        },
+        'publisher': {
+            '@type': 'Organization',
+            'name': SITE_NAME,
+        },
+    }
+
+    if absolute_image_url:
+        article_schema['image'] = [absolute_image_url]
+
     context = {
 
         'news': news,
@@ -97,6 +147,18 @@ def news_detail(request, id):
         'related_news': related_news,
 
         'absolute_image_url': absolute_image_url,
+
+        'seo_title': f'{news.title} | {SITE_NAME}',
+
+        'seo_description': clean_description(news.text, 160),
+
+        'seo_canonical': article_url,
+
+        'seo_image': absolute_image_url,
+
+        'og_type': 'article',
+
+        'article_schema': json.dumps(article_schema, ensure_ascii=False),
 
     }
 
@@ -128,6 +190,15 @@ def category_news(request, id):
         'selected_category': category,
 
         'page_obj': page_obj,
+
+        'seo_title': f'{category.name} News | {SITE_NAME}',
+
+        'seo_description': clean_description(
+            category.desc,
+            160
+        ) or f'Latest {category.name} news and updates on {SITE_NAME}.',
+
+        'seo_canonical': absolute_url(request, 'category_news', category.id),
 
     }
 
@@ -176,3 +247,104 @@ def load_more_news(request, id):
         'has_next': page_obj.has_next()
 
     })
+
+
+def robots_txt(request):
+    sitemap_url = request.build_absolute_uri(reverse('sitemap_xml'))
+    content = '\n'.join([
+        'User-agent: *',
+        'Allow: /',
+        f'Sitemap: {sitemap_url}',
+        '',
+    ])
+    return HttpResponse(content, content_type='text/plain')
+
+
+def sitemap_xml(request):
+    urls = [
+        {
+            'loc': request.build_absolute_uri(reverse('home')),
+            'lastmod': '',
+            'priority': '1.0',
+            'changefreq': 'hourly',
+        }
+    ]
+
+    for category in Category.objects.all().order_by('id'):
+        urls.append({
+            'loc': absolute_url(request, 'category_news', category.id),
+            'lastmod': category.updated_at.date().isoformat() if category.updated_at else '',
+            'priority': '0.8',
+            'changefreq': 'daily',
+        })
+
+    for item in News.objects.all().order_by('-updated_at', '-id'):
+        image_url = ''
+        if item.featured_image:
+            image_url = request.build_absolute_uri(item.featured_image.url)
+
+        urls.append({
+            'loc': absolute_url(request, 'news_detail', item.id),
+            'lastmod': item.updated_at.date().isoformat() if item.updated_at else '',
+            'priority': '0.9',
+            'changefreq': 'daily',
+            'image': image_url,
+            'image_title': item.title or '',
+        })
+
+    xml_parts = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
+    ]
+
+    for item in urls:
+        xml_parts.append('  <url>')
+        xml_parts.append(f'    <loc>{escape(item["loc"])}</loc>')
+
+        if item.get('lastmod'):
+            xml_parts.append(f'    <lastmod>{escape(item["lastmod"])}</lastmod>')
+
+        xml_parts.append(f'    <changefreq>{item["changefreq"]}</changefreq>')
+        xml_parts.append(f'    <priority>{item["priority"]}</priority>')
+
+        if item.get('image'):
+            xml_parts.append('    <image:image>')
+            xml_parts.append(f'      <image:loc>{escape(item["image"])}</image:loc>')
+            xml_parts.append(f'      <image:title>{escape(item["image_title"])}</image:title>')
+            xml_parts.append('    </image:image>')
+
+        xml_parts.append('  </url>')
+
+    xml_parts.append('</urlset>')
+
+    return HttpResponse('\n'.join(xml_parts), content_type='application/xml')
+
+
+def rss_feed(request):
+    items = News.objects.all().order_by('-id')[:50]
+    site_url = request.build_absolute_uri(reverse('home'))
+
+    xml_parts = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<rss version="2.0">',
+        '<channel>',
+        f'<title>{escape(SITE_NAME)}</title>',
+        f'<link>{escape(site_url)}</link>',
+        f'<description>{escape(SITE_DESCRIPTION)}</description>',
+    ]
+
+    for item in items:
+        article_url = absolute_url(request, 'news_detail', item.id)
+        xml_parts.extend([
+            '<item>',
+            f'<title>{escape(item.title or SITE_NAME)}</title>',
+            f'<link>{escape(article_url)}</link>',
+            f'<guid>{escape(article_url)}</guid>',
+            f'<description>{escape(clean_description(item.text, 240))}</description>',
+            f'<pubDate>{item.created_at.strftime("%a, %d %b %Y %H:%M:%S +0000")}</pubDate>' if item.created_at else '',
+            '</item>',
+        ])
+
+    xml_parts.extend(['</channel>', '</rss>'])
+
+    return HttpResponse('\n'.join(part for part in xml_parts if part), content_type='application/rss+xml')

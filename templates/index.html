@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
+{% load ad_tags %}
 
 {% block title %}News Fast Live | Home{% endblock %}
 
 {% block content %}
+{% render_ad "home_top" %}
+
 <section class="front-page">
     <div class="premium-cover">
         <div>
@@ -52,6 +55,8 @@
     </div>
 </section>
 
+{% render_ad "below_hero" %}
+
 <section class="visual-deck">
     {% for news in page_obj|slice:"1:4" %}
     <a href="{% url 'news_detail' news.id %}" class="visual-card">
@@ -66,6 +71,8 @@
     {% endfor %}
 </section>
 
+{% render_ad "after_visual_deck" %}
+
 <section class="content-band">
     <div class="section-heading">
         <div>
@@ -76,6 +83,9 @@
 
     <div class="news-grid">
         {% for news in page_obj %}
+        {% if forloop.counter == 5 %}
+        {% render_ad "in_feed" %}
+        {% endif %}
         <a href="{% url 'news_detail' news.id %}" class="news-card">
             <div class="thumb-frame">
                 {% if news.featured_image %}
@@ -105,8 +115,14 @@
     {% endif %}
 </section>
 
+{% render_ad "latest_bottom" %}
+
 {% for item in category_news %}
 {% if item.news %}
+{% if forloop.counter0 and forloop.counter0|divisibleby:2 %}
+{% render_ad "category_section" %}
+{% endif %}
+
 <section class="content-band category-edition">
     <div class="section-heading">
         <div>
