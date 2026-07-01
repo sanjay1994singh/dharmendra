@@ -128,8 +128,8 @@ img{
 }
 
 .brand-mark img{
-    width:54px;
-    height:54px;
+    width:98px;
+    height:84px;
     object-fit:cover;
     border:1px solid var(--line);
 }

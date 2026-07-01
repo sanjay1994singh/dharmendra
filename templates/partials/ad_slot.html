@@ -31,12 +31,4 @@
         {% endif %}
     {% endif %}
 </aside>
-{% elif request.user.is_staff %}
-<aside class="ad-slot ad-slot-empty" data-ad-position="{{ position }}">
-    <div class="ad-slot-label">
-        <span>Ad slot empty</span>
-        <strong>{{ position }}</strong>
-    </div>
-    <p>Add an active advertisement in admin for this position.</p>
-</aside>
 {% endif %}
