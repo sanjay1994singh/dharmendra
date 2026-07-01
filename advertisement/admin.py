@@ -9,6 +9,8 @@ class AdvertisementAdmin(admin.ModelAdmin):
         'position',
         'ad_type',
         'sponsor_name',
+        'contact_phone',
+        'whatsapp_number',
         'is_active',
         'starts_at',
         'ends_at',
@@ -24,7 +26,18 @@ class AdvertisementAdmin(admin.ModelAdmin):
             'fields': ('title', 'position', 'display_order', 'is_active')
         }),
         ('Ad content', {
-            'fields': ('ad_type', 'sponsor_name', 'image', 'target_url', 'text', 'html_code')
+            'fields': (
+                'ad_type',
+                'sponsor_name',
+                'subtitle',
+                'text',
+                'contact_phone',
+                'whatsapp_number',
+                'button_text',
+                'image',
+                'target_url',
+                'html_code',
+            )
         }),
         ('Schedule', {
             'fields': ('starts_at', 'ends_at')

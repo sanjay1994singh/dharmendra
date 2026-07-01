@@ -1,9 +1,42 @@
 {% if ad %}
-<aside class="ad-slot ad-slot-{{ position }}" data-ad-position="{{ position }}" data-ad-title="{{ ad.title }}">
-    <div class="ad-slot-label">
-        <span>Advertisement</span>
-        <strong>{{ ad.get_position_display }} | {{ ad.title }}</strong>
-    </div>
+<aside class="ad-slot ad-slot-{{ position }} {% if ad.ad_type == 'html' %}ad-slot-custom{% endif %}" data-ad-position="{{ position }}" data-ad-title="{{ ad.title }}">
+    {% if ad.ad_type == 'html' %}
+        {% if ad.html_code %}
+        <div class="ad-html">{{ ad.html_code|safe }}</div>
+        {% else %}
+        <div class="ad-html">
+            <div class="upmedia-ad">
+                <span class="upmedia-badge">Advertisement</span>
+                <div class="upmedia-copy">
+                    {% if ad.sponsor_name %}
+                    <small>{{ ad.sponsor_name }}</small>
+                    {% endif %}
+                    <h3>{{ ad.title }}</h3>
+                    {% if ad.subtitle %}
+                    <p>{{ ad.subtitle }}</p>
+                    {% elif ad.text %}
+                    <p>{{ ad.text }}</p>
+                    {% endif %}
+                    {% if ad.contact_phone or ad.whatsapp_number %}
+                    <strong>
+                        {% if ad.contact_phone %}Contact: {{ ad.contact_phone }}{% endif %}
+                        {% if ad.contact_phone and ad.whatsapp_number %} | {% endif %}
+                        {% if ad.whatsapp_number %}WhatsApp: {{ ad.whatsapp_number }}{% endif %}
+                    </strong>
+                    {% endif %}
+                </div>
+                {% if ad.target_url %}
+                <a class="upmedia-call" href="{{ ad.target_url }}" target="_blank" rel="noopener sponsored">{{ ad.button_text|default:"Call Now" }}</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    {% else %}
+        <div class="ad-slot-label">
+            <span>Advertisement</span>
+            <strong>{{ ad.get_position_display }} | {{ ad.title }}</strong>
+        </div>
+    {% endif %}
 
     {% if ad.ad_type == 'image' %}
         {% if ad.target_url %}
@@ -19,9 +52,7 @@
             {% endif %}
         </div>
         {% endif %}
-    {% elif ad.ad_type == 'html' %}
-        <div class="ad-html">{{ ad.html_code|safe }}</div>
-    {% else %}
+    {% elif ad.ad_type == 'text' %}
         {% if ad.target_url %}
         <a href="{{ ad.target_url }}" target="_blank" rel="noopener sponsored" class="ad-text">
             {{ ad.text|default:ad.title }}

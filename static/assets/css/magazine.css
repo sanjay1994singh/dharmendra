@@ -884,6 +884,17 @@ img{
     position:relative;
 }
 
+.ad-slot-custom{
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    overflow:visible;
+}
+
+.ad-slot-custom::before{
+    display:none;
+}
+
 .ad-slot::before{
     content:"";
     position:absolute;
@@ -923,6 +934,92 @@ img{
     min-height:110px;
     align-items:center;
     justify-content:center;
+}
+
+.ad-slot-custom .ad-html{
+    display:block;
+    min-height:0;
+}
+
+.upmedia-ad{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:18px;
+    width:100%;
+    padding:22px 20px;
+    background:linear-gradient(105deg,#fff9ea,#fff3f0);
+    border:1px solid #f4c78d;
+    border-left:6px solid #cf202f;
+    border-radius:8px;
+    box-shadow:0 10px 28px rgba(120,53,15,.08);
+}
+
+.upmedia-badge{
+    align-self:start;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 12px;
+    background:#111827;
+    color:#fff;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:900;
+    text-transform:uppercase;
+    white-space:nowrap;
+}
+
+.upmedia-copy small{
+    display:block;
+    color:#4b5563;
+    font-size:14px;
+    font-weight:900;
+    text-transform:uppercase;
+}
+
+.upmedia-copy h3{
+    margin:4px 0 0;
+    color:#07111f;
+    font-family:"Noto Serif Devanagari",Georgia,serif;
+    font-size:clamp(28px,3.6vw,42px);
+    line-height:1.08;
+    font-weight:900;
+}
+
+.upmedia-copy p{
+    margin:3px 0 0;
+    color:#4b5563;
+    font-size:18px;
+    font-weight:900;
+}
+
+.upmedia-copy strong{
+    display:block;
+    margin-top:6px;
+    color:#941023;
+    font-size:20px;
+    font-weight:900;
+}
+
+.upmedia-call{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:134px;
+    min-height:60px;
+    padding:14px 18px;
+    background:#c91f2b;
+    color:#fff;
+    border-radius:8px;
+    font-size:22px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.upmedia-call:hover{
+    background:#991b1f;
+    color:#fff;
 }
 
 .ad-media img{
@@ -1182,6 +1279,27 @@ img{
     .ad-text{
         font-size:20px;
         padding:20px;
+    }
+
+    .upmedia-ad{
+        grid-template-columns:1fr;
+        gap:12px;
+        padding:18px;
+    }
+
+    .upmedia-badge{
+        align-self:auto;
+        width:max-content;
+    }
+
+    .upmedia-copy h3{
+        font-size:28px;
+    }
+
+    .upmedia-call{
+        width:max-content;
+        min-height:52px;
+        font-size:18px;
     }
 
     .news-grid{
